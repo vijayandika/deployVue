@@ -1,6 +1,8 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+      <div v-for="(item, index) in car" :key="index" v-if="'asd'">
+        <h1>{{ msg }}</h1>
+      </div>
   </div>
 </template>
 
@@ -9,7 +11,8 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Deploy vue'
+      msg: 'Deploy vue',
+      car: ['c1', 'c2', 'c3']
     }
   }
 }
