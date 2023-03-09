@@ -4,9 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import CKEditor from '@ckeditor/ckeditor5-vue2';
+import axios from 'axios';
 
 Vue.config.productionTip = false
 Vue.use(CKEditor);
+Vue.use(axios);
 
 /* eslint-disable no-new */
 new Vue({
