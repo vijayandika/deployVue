@@ -3,8 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
 Vue.config.productionTip = false
+Vue.use(CKEditor);
 
 /* eslint-disable no-new */
 new Vue({
