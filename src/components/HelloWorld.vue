@@ -1,5 +1,12 @@
 <template>
-  <div :id="id" :value="defaultValue" class="ck"></div>
+  <div>
+    <div class="container">
+      <div :id="id" :value="defaultValue" class="ck"></div>
+      <div id="editor"></div>
+      <button @click="submit()">Submit</button>
+      <pre id="value"></pre>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -27,6 +34,10 @@ export default {
     });
   },
   methods: {
+    submit() {
+      let data = _editor.getData();
+      console.log(data);
+    },
     getValue() {
       if (_editor) return _editor.getData();
     }
@@ -248,29 +259,27 @@ function renderCKEditor(id, cb) {
       "MathType"
     ]
   }).then(cb => {
-    var params = window.navigation.currentEntry.url.split("&");
-    var token =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJkOTZjMzliNTM4YTExOTY0YzM1MjEyNTI3ZjBjMjIzMWNlNTA5NmVjN2QzM2I5NTAyMGQwODEwNzQ5ZTUzOWY0YWY5NzNiMjkwMzJiYTQ2In0.eyJhdWQiOiI0IiwianRpIjoiMmQ5NmMzOWI1MzhhMTE5NjRjMzUyMTI1MjdmMGMyMjMxY2U1MDk2ZWM3ZDMzYjk1MDIwZDA4MTA3NDllNTM5ZjRhZjk3M2IyOTAzMmJhNDYiLCJpYXQiOjE2NzY1OTI3ODMsIm5iZiI6MTY3NjU5Mjc4MywiZXhwIjoxNzA4MTI4NzgzLCJzdWIiOiI0ZWQ4OTdiYS1jZjJmLTRjODYtYjZhOS02ZWIzNjllNmVhM2YiLCJzY29wZXMiOltdLCJjb21wIjoiMWQ0Yjk4ZGUtYzY1ZS00ZjBhLWEwMjktODM3YjE2MmEzMTYzIn0.n3N1lzR1Gl6cA3xFFQjBUUyQh539TFCMRrsk2pQbQikTSmPKrKDI8REIYiMwUIRuJGVN4uJ0R_Al3acHa32r_JXcW8oGfVK5rbZSlYNfSvexDpeDn1QwUGPWavh8BibW0G9cfdU59RDZqIiKqwwGBCaq4qx4P70rXtrg2H9QfxHt5HJ-hDcXo3jmCbCGO7j4WWLz4SZ1QBoEZZTwL_QeS3q9O9o3OhoUKM_LcSIRtW4YVVO8xbQaZuN7Mp9sZa8q6o5zuu3OYF0DdGoP16MM2b2sfAjspsFgiCss0QfUgqTsbzc_-tRNoDJVSU1NcPfTz-0MY77nY9CYPO2OGlF_nW2WEvz8xQuFpXxjyxhxF8uLigteBdP7pbXLe4TyRFilIg9Pkw6xDLoxkX-786_vFQVIUao6S0mZz2tn0IwlPoOSN_Cn4qHTG0NFMWC688PP85i5b5cFdfS1Iw54NHb2KWZ8o7reJbQ9RuFB2-ZbnyoNqWTpnvdom0Nr3XGt2v3O0F5y_wLwGsfvoZF9Ea9N6s05xZXgprIh_rC8-Lu0rNuHoLGHHg6XOdpVZ2LeK5ZGFTXNj13MOM3Wgv_vqJJQAnSBGU8WBkKnMD_Kpon5NvC__LQ4zR3-JORurqvPgxANw26NzJrPEm_Jomm0yYDLbAnYeYgEfhJePR6Kalf4Nyw";
+    let params = window.navigation.currentEntry.url.split("&");
     if (params) {
-      // var params2 = params[0].split("?");
-      // var params3 = params[1].split("token=");
-      // var params4 = params2[1].split("url=data/");
-      // console.log('2', params2)
-      const config = { headers: { Authorization: `Bearer ${token}` } };
+      let params2 = params[0].split("?");
+      let params3 = params[1].split("token=");
+      let params4 = params2[1].split("url=data%2F");
+      params4[1] = params4[1].replace("%2F", "/");
+      params4[1] = params4[1].replace("%3F", "?");
+      params4[1] = params4[1].replace("%3D", "=");
+      const config = { headers: { Authorization: `Bearer ${params3[1]}` } };
       axios
-        .get(
-          "https://app.api.elsoft.id/admin/api/v1/documentgroup/cd9165dd-d809-48f2-847b-4e3ca53afabc?field=view2",
-          config
-        )
+        .get(`https://app.api.elsoft.id/admin/api/v1/${params4[1]}`, config)
         .then(function(res) {
           if (res.data.Content) cb.setData(res.data.Content);
+          _editor = cb;
         });
     }
-    // editor.ui.focusTracker.on("change:isFocused", (evt, name, isFocused) => {
-    //   if (!isFocused) {
-    //     // console.log(editor.getData());
-    //   }
-    // });
+    cb.ui.focusTracker.on("change:isFocused", (evt, name, isFocused) => {
+      if (!isFocused) {
+        console.log(cb.getData());
+      }
+    });
   });
 }
 </script>
@@ -287,5 +296,18 @@ function renderCKEditor(id, cb) {
 }
 .ck-restricted-editing_mode_standard {
   padding: 30px !important;
+}
+.container {
+  width: 1000px;
+  margin: 20px auto;
+}
+.ck-editor__editable[role="textbox"] {
+  /* editing area */
+  min-height: 200px;
+}
+.ck-content .image {
+  /* block images */
+  max-width: 80%;
+  margin: 20px auto;
 }
 </style>
