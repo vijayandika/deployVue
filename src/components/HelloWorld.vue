@@ -263,7 +263,7 @@ function renderCKEditor(id, cb) {
           config
         )
         .then(function(res) {
-          if (res.data.Content) editor.setData(res.data.Content);
+          if (res.data.Content) cb.setData(res.data.Content);
         });
     }
     // editor.ui.focusTracker.on("change:isFocused", (evt, name, isFocused) => {
