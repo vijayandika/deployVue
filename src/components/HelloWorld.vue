@@ -12,6 +12,8 @@
 <script>
 import axios from "axios";
 let _editor;
+let postUrl;
+let tokenUrl;
 export default {
   props: {
     value: String,
@@ -34,9 +36,14 @@ export default {
     });
   },
   methods: {
-    submit() {
+    async submit() {
       let data = _editor.getData();
-      console.log(data);
+      try {
+        await axios.post(postUrl, { Content: data }, tokenUrl);
+        window.close();
+      } catch (err) {
+        console.log(err);
+      }
     },
     getValue() {
       if (_editor) return _editor.getData();
@@ -263,15 +270,19 @@ function renderCKEditor(id, cb) {
     if (params) {
       let params2 = params[0].split("?");
       let params3 = params[1].split("token=");
-      let params4 = params2[1].split("url=data%2F");
+      let params4 = params2[1].split("url=");
       params4[1] = params4[1].replace("%2F", "/");
       params4[1] = params4[1].replace("%3F", "?");
       params4[1] = params4[1].replace("%3D", "=");
       const config = { headers: { Authorization: `Bearer ${params3[1]}` } };
+      tokenUrl = config;
       axios
         .get(`https://app.api.elsoft.id/admin/api/v1/${params4[1]}`, config)
         .then(function(res) {
-          if (res.data.Content) cb.setData(res.data.Content);
+          if (res.data.Content) {
+            cb.setData(res.data.Content);
+            postUrl = res.data.Post;
+          }
           _editor = cb;
         });
     }
