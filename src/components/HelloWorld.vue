@@ -39,8 +39,10 @@ export default {
     async submit() {
       let data = _editor.getData();
       try {
-        await axios.post(postUrl, { Content: data }, tokenUrl);
-        window.close();
+        await axios.post(`https://app.api.elsoft.id/admin/api/v1/` + postUrl, { Content: data }, tokenUrl);
+        setTimeout(() => {
+          window.close();
+        }, 1000);
       } catch (err) {
         console.log(err);
       }
