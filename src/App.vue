@@ -1,18 +1,22 @@
 <template>
   <div id="app">
-    <router-view/>
+    <helloworld></helloworld>
+    <helloworld2></helloworld2>
   </div>
 </template>
 
 <script>
+import helloworld from "./components/HelloWorld.vue";
+import helloworld2 from "./components/HelloWorld2.vue";
 export default {
-  name: 'App'
-}
+  name: "App",
+  components: { helloworld, helloworld2 }
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

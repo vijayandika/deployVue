@@ -3,9 +3,10 @@
     <div class="container">
       <div :id="id" :value="defaultValue" class="ck"></div>
       <div id="editor"></div>
-      <button @click="submit()">Submit</button>
+      <button @click="submit()">Submit CK Editor</button>
       <pre id="value"></pre>
     </div>
+    <hr/>
   </div>
 </template>
 
